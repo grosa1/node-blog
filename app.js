@@ -1,12 +1,15 @@
 // Setup
 var express = require('express');
-var JsonDB = require('node-json-db');
 var bodyParser = require('body-parser');
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
 
 //setup
 var app = express();
 
-var db = new JsonDB("blog", true, false);
+const adapter = new FileSync('db.json')
+const db = low(adapter)
+db.defaults({ posts: []}).write()
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -16,19 +19,22 @@ app.use(bodyParser.urlencoded({ extended: true}));
 
 // routes
 app.get("/", (req, res) => {
-    let posts = db.getData('/');
-    console.log(posts);
+    let posts = db.get('posts').value();
     res.render('index', { posts: posts})
 });
 
-app.post('/addpost', (req, res) => {
-    var postData = req.body;
+app.post('/addPost', (req, res) => {
+    console.log(req.body);
+    let postTitle = req.body.title;
+    let postBody = req.body.body;
+    //timestamp mills
+    let postDate = Date.now();
 
-    db.push('/', postData).then( result => {
-        res.redirect('/');
-    }).catch(err => {
-        res.status(400).send("Unable to save data");
-    });
+    db.get('posts')
+        .push({ date: postDate, title: postTitle, body: postBody})
+        .write()
+
+    res.redirect('/');
 });
 
 // Listen
