@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 // routes
 app.get("/", (req, res) => {
     let posts = db.get('posts').value();
-    res.render('index', { posts: posts})
+    res.render('index', { posts: posts});
 });
 
 app.post('/addPost', (req, res) => {
@@ -35,6 +35,11 @@ app.post('/addPost', (req, res) => {
         .write()
 
     res.redirect('/');
+});
+
+app.get("/writePost", (req, res) => {
+    let posts = db.get('posts').value();
+    res.render('new-post', { posts: posts});
 });
 
 // Listen
