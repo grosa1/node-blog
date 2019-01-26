@@ -20,8 +20,7 @@ module.exports = function(app, db) {
     });
 
     app.post('/add-post', (req, res) => {
-        let timestamp = Date.now();
-        req.body.date = timestamp.toString();
+        req.body.date = new Date(Date.now()).toLocaleDateString();
         var postData = new Post(req.body);
         postData.save().then( result => {
             res.redirect('/');
