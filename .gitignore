@@ -1,6 +1,4 @@
-
-# Created by https://www.gitignore.io/api/node,webstorm,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=node,webstorm,visualstudiocode
+.idea
 
 ### Node ###
 # Logs
